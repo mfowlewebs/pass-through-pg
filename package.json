@@ -4,7 +4,8 @@
   "description": "Content-pass through proxy service",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "nodemon server.js"
   },
   "keywords": [],
   "author": "@mfowlewebs",
@@ -13,5 +14,8 @@
   "dependencies": {
     "node-fetch": "^2.1.1",
     "pg": "^7.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.1"
   }
 }
