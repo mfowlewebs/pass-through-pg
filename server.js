@@ -94,7 +94,7 @@ async function passThroughCache( req, res){
 	// ask the db to serve it
 	if( await askDb( req.url, req.headers.host, res)){
 		// it did - we're done
-		return
+		return;
 	}
 
 	// fetch the resource
@@ -109,10 +109,14 @@ async function passThroughCache( req, res){
 }
 
 async function main(){
+	if (!APP_SERVICE_IP){
+		console.log(JSON.stringify({error: "no `APP_SERVICE_IP` specified"}));
+	}
+
 	await pg.connect();
 	const proxyServer = http.createServer(passThroughCache);
 	proxyServer.listen(PORT);
-	console.log({status: "started", port: PORT})
+	console.log(JSON.stringify({status: "started", port: PORT}));
 }
 
 if (require.main === module){
