@@ -1,0 +1,17 @@
+{
+  "name": "pass-through-pg",
+  "version": "1.0.0",
+  "description": "Content-pass through proxy service",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "@mfowlewebs",
+  "license": "proprietary",
+  "private": true,
+  "dependencies": {
+    "node-fetch": "^2.1.1",
+    "pg": "^7.4.1"
+  }
+}
