@@ -1,5 +1,5 @@
 var http = require("http");
-var buffer = require("buffer");
+var Buffer = require("buffer").Buffer;
 var PGClient = require("pg").Client;
 var fetch = require("node-fetch");
 
@@ -19,13 +19,13 @@ function headers(body, url){
 		contentType = "text/style";
 	}
 	return {
-		'Content-Length': buffer.byteLength(body),
+		'Content-Length': Buffer.byteLength(body),
 		'Content-Type': contentType
 	}
 }
 
-function response(body, res){
-	res.writeHeader(200, headers(body, res.url));
+function response(body, url, res){
+	res.writeHeader(200, headers(body, url));
 	res.end(body);
 }
 
@@ -52,7 +52,7 @@ async function askDb( url, host, res){
 
 	// return cached response
 	if( response&& response.rows&& response.rows.length){
-		response(response.rows[0].body, res);
+		response(response.rows[0].body, url, res);
 		return true;
 	}
 	return false;
@@ -61,11 +61,11 @@ async function askDb( url, host, res){
 // DOWNLOAD
 
 async function downloadBlob( req){
-	var response = await fetch({
-		url: `http://${APP_SERVICE_IP}${req.url}`,
+	var url = `http://${APP_SERVICE_IP}${req.url}`
+	var response = await fetch(url, {
 		headers: req.headers // important thing is to relay along "host" header via this
 	});
-	return body.blob();
+	return response.buffer(); // use the node only api
 }
 
 // RELAY BLOB
@@ -101,7 +101,7 @@ async function passThroughCache( req, res){
 	var blob = await downloadBlob( req);
 
 	// relay fetched response
-	response(blob, res);
+	response(blob, req.url, res);
 
 	// save result to db
 	// TODO: we could check to see if db has gotten the resource in the interveneing time & skip this if so
